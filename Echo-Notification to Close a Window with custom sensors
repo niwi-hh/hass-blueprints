@@ -3,7 +3,7 @@
 #
 # Sends three notifications to an Amazon Echo device to close a window or door after opening it, 
 # if the humidity reading (indoor) and temperature reading (outdoor) of the given sensors are below a certain level. 
-# or this blueprint you need a a working Alexa Media Player Integration, and a humidity sensor that updates its data in short intervalls.
+# For this blueprint you need a a working Alexa Media Player Integration, and a humidity sensor that updates its data in short intervalls.
 # Most likely it needs a wired power connection for this. A working configuration is the SONOFF TH Sensor Si7021 connected to a Sonoff TH10.
 #
 # Revision 1.1
