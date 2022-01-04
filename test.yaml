@@ -155,8 +155,7 @@ action:
   - service: scene.create
     data:
       scene_id: echo_volume_before_notification
-      snapshot_entities:
-      - !input echo
+      snapshot_entities: !input echo
   - service: media_player.volume_set
     target:
       entity_id: !input echo
