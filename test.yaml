@@ -12,7 +12,7 @@
 #
 
 blueprint:
-  name: 'Echo-Notification to Close a Window with custom sensors-Test'
+  name: 'Echo-Notification to Close a Window with custom sensors'
   description: Notification by Alexa to close windows if the humidity inside is below a given value. For this blueprint you need a a working Alexa Media Player Integration, and a humidity sensor that updates its data in short intervalls. Most likely it needs a wired power connection for this. A working configuration is the SONOFF TH Sensor Si7021 connected to a Sonoff TH10.
   
   domain: automation
@@ -99,10 +99,20 @@ blueprint:
       description: 'Write the device name of the echo you want to use. Something like media_player.echo_bathroom.'
       selector: 
         text:
-    volume:
-      name: 'Volume'
+    volume-message:
+      name: 'Volume of the message'
       description: 'Set the volume of the message'
-      default: 0.6
+      default: 0,7
+      selector: 
+        number:
+          min: 0
+          step: 0.01
+          max: 1
+          mode: slider
+    volume-after:
+      name: 'Volume after the message'
+      description: 'The volume your Echo device should use, after the message was spoken'
+      default: 0,5
       selector: 
         number:
           min: 0
@@ -152,22 +162,20 @@ condition:
   below: !input temperature
 # Send a notification to the Echo device. 
 action:
-  - service: scene.create
-    data:
-      scene_id: echo_volume_before_notification
-      snapshot_entities: !input echo
   - service: media_player.volume_set
     target:
       entity_id: !input echo
     data:
-      volume_level: !input volume
+      volume_level: !input volume-message
   - service: notify.alexa_media
     data:
       message: !input message
       data:
         type: tts
       target: !input echo
-  - service: scene.turn_on
+  - service: media_player.volume_set
     target:
-      entity_id: echo_volume_before_notification
+      entity_id: !input echo
+    data:
+      volume_level: !input volume-after
 mode: single
