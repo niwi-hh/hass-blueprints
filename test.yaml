@@ -102,7 +102,7 @@ blueprint:
     volume:
       name: 'Volume'
       description: 'Set the volume of the message'
-      default: 0,6
+      default: 0.6
       selector: 
         number:
           min: 0
