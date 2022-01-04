@@ -12,7 +12,7 @@
 #
 
 blueprint:
-  name: 'Echo-Notification to Close a Window with custom sensors'
+  name: 'Echo-Notification to Close a Window with custom sensors-Test'
   description: Notification by Alexa to close windows if the humidity inside is below a given value. For this blueprint you need a a working Alexa Media Player Integration, and a humidity sensor that updates its data in short intervalls. Most likely it needs a wired power connection for this. A working configuration is the SONOFF TH Sensor Si7021 connected to a Sonoff TH10.
   
   domain: automation
