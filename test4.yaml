@@ -102,7 +102,7 @@ blueprint:
     volume-message:
       name: 'Volume of the message'
       description: 'Set the volume of the message'
-      default: 0,7
+      default: 0.7
       selector: 
         number:
           min: 0
@@ -112,7 +112,7 @@ blueprint:
     volume-after:
       name: 'Volume after the message'
       description: 'The volume your Echo device should use, after the message was spoken'
-      default: 0,5
+      default: 0.5
       selector: 
         number:
           min: 0
