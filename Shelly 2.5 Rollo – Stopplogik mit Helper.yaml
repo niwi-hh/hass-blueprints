@@ -1,0 +1,87 @@
+blueprint:
+  name: Shelly 2.5 Rollo – Stopplogik mit Helper
+  description: >
+    Steuert ein Rollo über zwei Taster (hoch/runter) im Detached-Modus. Merkt sich Bewegungsstatus über ein input_text-Helperfeld.
+    - Ein Tastendruck startet Bewegung in gewünschte Richtung
+    - Wenn das Rollo schon fährt (egal in welche Richtung), wird es durch jeden Tastendruck gestoppt
+  domain: automation
+  input:
+    taster_hoch:
+      name: Taster Hoch
+      selector:
+        entity:
+          domain: binary_sensor
+    taster_runter:
+      name: Taster Runter
+      selector:
+        entity:
+          domain: binary_sensor
+    rollo:
+      name: Rollo
+      selector:
+        entity:
+          domain: cover
+    zustand_helper:
+      name: Bewegungszustand (input_text)
+      selector:
+        entity:
+          domain: input_text
+
+trigger:
+  - platform: state
+    entity_id: !input taster_hoch
+    to: "on"
+    id: hoch
+  - platform: state
+    entity_id: !input taster_runter
+    to: "on"
+    id: runter
+
+variables:
+  rollo_entity: !input rollo
+  helper_entity: !input zustand_helper
+  befehl: "{{ trigger.id }}"
+  zustand: "{{ states(helper_entity) | lower }}"
+
+mode: single
+
+action:
+  - choose:
+      - conditions: "{{ zustand == befehl }}"
+        sequence:
+          - service: cover.stop_cover
+            target:
+              entity_id: "{{ rollo_entity }}"
+          - service: input_text.set_value
+            target:
+              entity_id: "{{ helper_entity }}"
+            data:
+              value: ""
+      - conditions: "{{ zustand != '' and zustand != befehl }}"
+        sequence:
+          - service: cover.stop_cover
+            target:
+              entity_id: "{{ rollo_entity }}"
+          - service: input_text.set_value
+            target:
+              entity_id: "{{ helper_entity }}"
+            data:
+              value: ""
+      - conditions: "{{ zustand == '' }}"
+        sequence:
+          - choose:
+              - conditions: "{{ befehl == 'hoch' }}"
+                sequence:
+                  - service: cover.open_cover
+                    target:
+                      entity_id: "{{ rollo_entity }}"
+              - conditions: "{{ befehl == 'runter' }}"
+                sequence:
+                  - service: cover.close_cover
+                    target:
+                      entity_id: "{{ rollo_entity }}"
+          - service: input_text.set_value
+            target:
+              entity_id: "{{ helper_entity }}"
+            data:
+              value: "{{ befehl }}"
